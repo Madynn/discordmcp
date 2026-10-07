@@ -281,8 +281,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     switch (name) {
       case "send-message": {
-        const { channel: channelIdentifier, message } = SendMessageSchema.parse(args);
-        const channel = await findChannel(channelIdentifier);
+        const { server: srv, channel: channelIdentifier, message } = SendMessageSchema.parse(args);
+        const channel = await findChannel(channelIdentifier, srv);
         
         const sent = await channel.send(message);
         return {
@@ -294,8 +294,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "read-messages": {
-        const { channel: channelIdentifier, limit } = ReadMessagesSchema.parse(args);
-        const channel = await findChannel(channelIdentifier);
+        const { server: srv, channel: channelIdentifier, limit } = ReadMessagesSchema.parse(args);
+        const channel = await findChannel(channelIdentifier, srv);
 
         const messages = await channel.messages.fetch({ limit });
         const formattedMessages = Array.from(messages.values()).map(msg => ({
